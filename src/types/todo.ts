@@ -1,7 +1,10 @@
 export interface Todo {
     id: number,
     text: string,
-    state : State
+    state : State,
+    color? : string,
+    hour? : Date
+    category? : string
 }
 
 
