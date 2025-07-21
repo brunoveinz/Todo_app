@@ -6,10 +6,11 @@ import { DEFAULT_TODO } from './src/constant/default';
 import { Switch } from 'react-native';
 import { COLORS, CARD_COLORS } from './src/constant/colors';
 import { useTodos } from './src/hooks/useTodos';
+import { SwipeRow } from 'react-native-swipe-list-view';
 
 export default function App() {
 
-  const {tasks, addTask, removeTask } = useTodos();
+  const {tasks, addTask, removeTask, toggleTask } = useTodos();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [taskText, setTaskText] = useState("")
   const [selectedColor, setSelectedColor] = useState(CARD_COLORS[0])
@@ -37,6 +38,11 @@ export default function App() {
   const handleDeleteTask = (id: number ) => {
     removeTask(id);
   }
+
+  const handleToggleTask = (id: number) => {
+    toggleTask(id);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -67,40 +73,63 @@ export default function App() {
       )}
 
         {tasks.map((todo) => (
-          <View key={todo.id} style={[{ backgroundColor: todo.color}, styles.todoItem]}>
-            {/* Header con título y botón eliminar */}
-            <View style={styles.todoHeader}>
-              <Text style={styles.todoText}>{todo.text}</Text>
-              <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteTask(todo.id)}>
-                <Text style={styles.deleteTextButton}>
-                  Quitar
-                </Text>
-              </TouchableOpacity>
+            <SwipeRow
+              key={todo.id}
+              rightOpenValue={-100}
+              disableRightSwipe={true}
+              leftOpenValue={0}
+              right={
+                // Botón oculto que aparece al hacer swipe
+                <View style={styles.hiddenItem}>
+                  <TouchableOpacity 
+                    style={styles.deleteSwipeButton} 
+                    onPress={() => handleDeleteTask(todo.id)}
+                  >
+                    <Text style={styles.deleteSwipeText}>Eliminar</Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            >
+            <View style={[{ backgroundColor: todo.color}, styles.todoItem]}>
+              {/* Header con título y botón eliminar */}
+              <View style={styles.todoHeader}>
+                <Text style={styles.todoText}>{todo.text}</Text>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteTask(todo.id)}>
+                  <Text style={styles.deleteTextButton}>
+                    Quitar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              
+              {/* Contenido principal */}
+              <Text style={styles.todoState}>Estado: {todo.state}</Text>
+              <Text style={styles.todoMeta}>
+                Categoría: {todo.category} | {todo.hour?.toLocaleDateString()}
+              </Text>
+              
+              {/* Footer con switch */}
+              <View style={styles.todoFooter}>
+                <Text style={styles.completeLabel}>Completar</Text>
+                <Switch
+                  value={todo.state === "complete"} // Por ahora siempre false
+                  onValueChange={() => handleToggleTask(todo.id)} // Por ahora vacío
+                  trackColor={{ false: '#767577', true: '#81b0ff' }}
+                  thumbColor={todo.state === "complete" ? '#f4f3f4' : '#f4f3f4'}
+                />
+              </View>
             </View>
-            
-            {/* Contenido principal */}
-            <Text style={styles.todoState}>Estado: {todo.state}</Text>
-            <Text style={styles.todoMeta}>
-              Categoría: {todo.category} | {todo.hour?.toLocaleDateString()}
-            </Text>
-            
-            {/* Footer con switch */}
-            <View style={styles.todoFooter}>
-              <Text style={styles.completeLabel}>Completar</Text>
-              <Switch
-                value={false} // Por ahora siempre false
-                onValueChange={() => {}} // Por ahora vacío
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={false ? '#f4f3f4' : '#f4f3f4'}
-              />
-            </View>
-          </View>
+          </SwipeRow>
         ))}  
       </ScrollView>
       
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <KeyboardAvoidingView style={styles.modalContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.modalContent}>
+
+            <TouchableOpacity style={styles.closeIconButton} onPress={closeModal}>
+              <Text style={styles.closeIcon}>✕</Text>
+            </TouchableOpacity>
+
             <Text style={styles.modalTitle}>Nueva Tarea</Text>
             
             <TextInput
@@ -136,10 +165,6 @@ export default function App() {
             <TouchableOpacity style={styles.createButton} onPress={handleCreateTask}>
               <Text style={styles.createButtonText}>Crear Tarea</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
 
           </View>
         </KeyboardAvoidingView>
@@ -150,6 +175,23 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  closeIconButton: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: COLORS.background.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  closeIcon: {
+    color: COLORS.text.primary,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
