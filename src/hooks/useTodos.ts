@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Todo } from "../types/todo";
 import { DEFAULT_TODO } from "../constant/default";
+import { NotificationService } from "../services/notificationService";
 
 export const useTodos = () => {    
     const [tasks, setTasks] = useState<Todo[]>([]);
@@ -34,7 +35,6 @@ export const useTodos = () => {
                 console.log(`Revisando tarea ${i}:`, currentTask)
                 
                 if (currentTask.id === id){
-                
                     console.log("¡Encontré la tarea que quiero cambiar!");
                     let newState: "pending" | "complete"; 
 
@@ -43,6 +43,7 @@ export const useTodos = () => {
                         console.log("estaba completa, ahora sera pendiente")
 
                     }else{
+                        NotificationService.sendTaskCompletedNotification(currentTask.text);
                         newState="complete";
                         console.log("Estaba pendiente ahora sera completa")
                     }
@@ -64,15 +65,12 @@ export const useTodos = () => {
                     newTasks.push(currentTask)
                 }
             }
-
             console.log("Nueva lista completa: ", newTasks)
-
             return newTasks;
         });
           console.log("toggleTask terminó, React actualizará la pantalla");
     }
     
-
     return {
         tasks,
         addTask,

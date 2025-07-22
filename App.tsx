@@ -6,7 +6,6 @@ import { DEFAULT_TODO } from './src/constant/default';
 import { Switch } from 'react-native';
 import { COLORS, CARD_COLORS } from './src/constant/colors';
 import { useTodos } from './src/hooks/useTodos';
-import { SwipeRow } from 'react-native-swipe-list-view';
 
 export default function App() {
 
@@ -73,31 +72,12 @@ export default function App() {
       )}
 
         {tasks.map((todo) => (
-            <SwipeRow
-              key={todo.id}
-              rightOpenValue={-100}
-              disableRightSwipe={true}
-              leftOpenValue={0}
-              right={
-                // Botón oculto que aparece al hacer swipe
-                <View style={styles.hiddenItem}>
-                  <TouchableOpacity 
-                    style={styles.deleteSwipeButton} 
-                    onPress={() => handleDeleteTask(todo.id)}
-                  >
-                    <Text style={styles.deleteSwipeText}>Eliminar</Text>
-                  </TouchableOpacity>
-                </View>
-              }
-            >
-            <View style={[{ backgroundColor: todo.color}, styles.todoItem]}>
+            <View key={todo.id} style={[{ backgroundColor: todo.color}, styles.todoItem]}>
               {/* Header con título y botón eliminar */}
               <View style={styles.todoHeader}>
                 <Text style={styles.todoText}>{todo.text}</Text>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteTask(todo.id)}>
-                  <Text style={styles.deleteTextButton}>
-                    Quitar
-                  </Text>
+                <TouchableOpacity style={styles.closeIconButton}  onPress={() => handleDeleteTask(todo.id)}>
+                  <Text style={styles.closeIcon}>✕</Text>
                 </TouchableOpacity>
               </View>
               
@@ -118,7 +98,6 @@ export default function App() {
                 />
               </View>
             </View>
-          </SwipeRow>
         ))}  
       </ScrollView>
       
