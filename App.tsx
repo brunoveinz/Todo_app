@@ -1,12 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import { Todo } from './src/types/todo';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DEFAULT_TODO } from './src/constant/default';
 import { Switch } from 'react-native';
 import { COLORS, CARD_COLORS } from './src/constant/colors';
 import { useTodos } from './src/hooks/useTodos';
+import * as SplashScreen from 'expo-splash-screen'
+import MySplashScreen from './src/components/splashScreen/splashScreen'
 
+
+SplashScreen.preventAutoHideAsync();
 export default function App() {
 
   const {tasks, addTask, removeTask, toggleTask } = useTodos();
@@ -42,6 +46,23 @@ export default function App() {
     toggleTask(id);
   }
 
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {                                    // 1. Hook que se ejecuta en el ciclo de vida del componente
+    async function prepareApp(){                       // 2. Declara función asíncrona para poder usar 'await'
+      await SplashScreen.hideAsync();                  // 5. Oculta el splash screen de forma asíncrona
+      await new Promise(resolve=> setTimeout(resolve, 2000))  // 3. Crea una Promise que se resuelve después de 2000ms (2 segundos)
+      
+      setIsAppReady(true)                             // 4. Cambia el estado de la app a "lista"
+    }                                                 // 6. Cierra la función prepareApp
+    
+    prepareApp();                                     // 7. Ejecuta inmediatamente la función prepareApp
+  },[]);                                              // 8. Array de dependencias vacío = se ejecuta solo UNA vez
+
+  
+  if (!isAppReady) {
+    return <MySplashScreen />; // ← Tu componente
+  }
 
   return (
     <View style={styles.container}>
