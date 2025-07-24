@@ -18,7 +18,7 @@ export default function MenuScreen() {
       
       <View style={styles.buttonContainer}>
         <CustomButton title='Tareas' backgroundColor={COLORS.button.primary} onPress={() => navigation.navigate('Tasks')}/>
-        <CustomButton title='Mis datos' backgroundColor={COLORS.button.secondary}  onPress={() => console.log("hola")}/>
+        <CustomButton title='Mis datos' backgroundColor={COLORS.button.secondary}  onPress={() => navigation.navigate('Profile')}/>
       </View>
     </View>
   );

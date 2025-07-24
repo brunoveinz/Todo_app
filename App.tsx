@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MenuScreen from './src/screens/MenuScreen';
 import Tasks from './src/screens/TaskListScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -33,7 +34,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Main'>
         <Stack.Screen name='Main' component={MenuScreen} options={{ title: 'Todo App' }}/>
         <Stack.Screen name='Tasks' component={Tasks} />
-        <Stack.Screen name='Profile' component={MenuScreen} />
+        <Stack.Screen name='Profile' component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

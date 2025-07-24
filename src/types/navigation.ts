@@ -1,4 +1,5 @@
 export type RootStackParamList = {
-    Menu: undefined,
-    Tasks: undefined
+    Menu: undefined;
+    Tasks: undefined;
+    Profile: undefined;
 }
