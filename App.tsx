@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen'
 import MySplashScreen from './src/components/splashScreen/splashScreen'
 import { useEffect, useState } from 'react';
@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MenuScreen from './src/screens/MenuScreen';
 import Tasks from './src/screens/TaskListScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import { COLORS } from './src/constant/colors';
 
 SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -30,13 +31,16 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Main'>
-        <Stack.Screen name='Main' component={MenuScreen} options={{ title: 'Todo App' }}/>
-        <Stack.Screen name='Tasks' component={Tasks} />
-        <Stack.Screen name='Profile' component={ProfileScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ flex:1 }}>
+      <StatusBar barStyle='light-content' backgroundColor={COLORS.background.primary} translucent={false} />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Main'>
+          <Stack.Screen name='Main' component={MenuScreen} options={{ title: 'Todo App' }}/>
+          <Stack.Screen name='Tasks' component={Tasks} />
+          <Stack.Screen name='Profile' component={ProfileScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 

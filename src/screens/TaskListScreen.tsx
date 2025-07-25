@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import { useState } from 'react';
 import { Switch } from 'react-native';
@@ -158,7 +157,6 @@ export default function Tasks() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-      <StatusBar style="light" backgroundColor='transparent' translucent={true} />
     </View>
   );
 }
